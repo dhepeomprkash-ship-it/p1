@@ -9,7 +9,7 @@ st.set_page_config(page_title="Sugarcane Disease AI", layout="wide")
 st.title("🌱 Sugarcane Disease Detection (उसावरील रोग ओळखणे)")
 
 # १. तुमचा अचूक Google Drive ID इथे टाका
-file_id = 'तुमचा_Google_Drive_ID_इथे_टाका'
+file_id = '1BN12K8BnyULv5X_nNQ8kQTYSLN_OZ_DI'
 url = f'https://drive.google.com/uc?export=download&id={file_id}'
 output = 'sugarcane_model.h5'
 
