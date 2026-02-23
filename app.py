@@ -29,11 +29,24 @@ if uploaded_file is not None:
     # इमेज प्रोसेसिंग
     img = image.resize((224, 224))
     img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    img_array = np.expand_dims(img_array, axis=0
+
+    # तुमच्या ट्रेनिंगच्या क्रमानुसार ही नावे तपासा (उदा. 0, 1, 2)
+classes = ['Healthy (निरोगी)', 'Bacterial Blight (जीवाणूजन्य करपा)', 'Red Rot (लाल कुज)']
+
+prediction = model.predict(img_array)
+result_index = np.argmax(prediction)
+confidence = np.max(prediction) * 100
+
+st.subheader("तपासणीचा निकाल:")
+
+if result_index == 0:
+    st.success(f"तुमचा ऊस निरोगी आहे! (खात्री: {confidence:.2f}%)")
+else:
+    st.error(f"सावधान! उसावर **{classes[result_index]}** आढळला आहे. (खात्री: {confidence:.2f}%)")
     
-    # निकाल
-    prediction = model.predict(img_array)
-    if np.argmax(prediction) == 0:
-        st.success("निकाल: ऊस निरोगी (Healthy) आहे!")
-    else:
-        st.error("निकाल: उसावर रोग (Diseased) आढळला आहे!")
+    # बी.एस्सी. ॲग्रीकल्चरच्या ज्ञानानुसार छोटा सल्ला
+    if result_index == 2: # Red Rot साठी
+        st.warning("सल्ला: बाधित झाडे मुळासकट उपटून नष्ट करा आणि बोर्डो मिश्रणाची फवारणी करा.")
+    
+   
