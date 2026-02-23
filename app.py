@@ -2,7 +2,17 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import gdown
+import os
 
+# १. तुमचा Google Drive File ID इथे टाका
+file_id = 'तुमचा_फाईल_ID_इथे_टाका'
+url = f'https://drive.google.com/uc?id={file_id}'
+output = 'sugarcane_model.h5'
+
+# मॉडेल नसल्यास डाउनलोड करा
+if not os.path.exists(output):
+    gdown.download(url, output, quiet=False)
 st.title("उसावरील रोग ओळखणे (Sugarcane Disease AI)")
 
 # मॉडेल लोड करणे
