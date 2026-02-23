@@ -5,16 +5,15 @@ import numpy as np
 import gdown
 import os
 
-# १. तुमचा Google Drive File ID इथे टाका
-file_id = '1A2B3C4D5E6F7G8H9I0J'
-# ही ओळ कोडमध्ये शोधून अशी अपडेट करा:
-url = f'https://drive.google.com/uc?export=download&id={file_id}'
+# १. तुमचा अचूक Google Drive File ID
+file_id = '1BN12K8BnyULv5X_nNQ8kQTYSLN_OZ_DI'
+url = f'https://drive.google.com/uc?id={file_id}'
 output = 'sugarcane_model.h5'
 
-# मॉडेल नसल्यास डाउनलोड करा
+# मॉडेल नसल्यास डाऊनलोड करा
 if not os.path.exists(output):
-    gdown.download(url, output, quiet=False)
-st.title("उसावरील रोग ओळखणे (Sugarcane Disease AI)")
+    with st.spinner('AI मॉडेल लोड होत आहे, कृपया थांबा...'):
+        gdown.download(url, output, quiet=False)
 
 # मॉडेल लोड करणे
 model = tf.keras.models.load_model('sugarcane_model.h5')
