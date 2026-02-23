@@ -6,7 +6,7 @@ import gdown
 import os
 
 # १. तुमचा Google Drive File ID इथे टाका
-file_id = 'तुमचा_फाईल_ID_इथे_टाका'
+file_id = '1A2B3C4D5E6F7G8H9I0J'
 url = f'https://drive.google.com/uc?id={file_id}'
 output = 'sugarcane_model.h5'
 
