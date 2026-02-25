@@ -32,44 +32,45 @@ disease_locations = [
 uploaded_file = st.file_uploader("उसाच्या पानाचा स्वच्छ फोटो अपलोड करा...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    # --- Image Tiling Logic (हा भाग प्रेडिक्शनच्या ठिकाणी वापरा) ---
-            image = Image.open(uploaded_file)
-    width, height = image.size
+    # --- प्रतिमेचे तुकडे (Tiling) सुरू ---
+    image = Image.open(uploaded_file)
+    st.image(image, caption='मूळ फोटो (Original Image)', width=500)
     
-    # प्रतिमेचे ४ समान तुकडे (Tiles) पाडणे
+    width, height = image.size
     mid_x, mid_y = width // 2, height // 2
     
-    # तुकड्यांचे को-ऑर्डिनेट्स (Box coordinates)
+    # ४ तुकड्यांचे बॉक्स
     tiles = [
-        (0, 0, mid_x, mid_y),       # वरचा डावा (Top-Left)
-        (mid_x, 0, width, mid_y),    # वरचा उजवा (Top-Right)
-        (0, mid_y, mid_x, height),   # खालचा डावा (Bottom-Left)
-        (mid_x, mid_y, width, height) # खालचा उजवा (Bottom-Right)
+        (0, 0, mid_x, mid_y),       # वरचा डावा
+        (mid_x, 0, width, mid_y),    # वरचा उजवा
+        (0, mid_y, mid_x, height),   # खालचा डावा
+        (mid_x, mid_y, width, height) # खालचा उजवा
     ]
     
-    st.subheader("तुकड्यांनुसार विश्लेषण (Tile-based Analysis):")
-    cols = st.columns(2) # स्क्रीनवर २x२ ग्रिडमध्ये तुकडे दाखवण्यासाठी
+    st.markdown("---")
+    st.subheader("🔍 तुकड्यांनुसार विश्लेषण (Tile-based Analysis):")
+    cols = st.columns(2) 
     
+    classes = ['Healthy (निरोगी)', 'Bacterial Blight', 'Red Rot']
+
     for i, box in enumerate(tiles):
-        tile_img = image.crop(box) # प्रतिमेचा तुकडा कापणे
+        tile_img = image.crop(box)
         
-        # एआय मॉडेलसाठी प्रोसेसिंग
+        # AI मॉडेलसाठी प्रोसेसिंग
         resized_tile = tile_img.resize((224, 224))
         img_array = np.array(resized_tile) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
         
-        # प्रेडिक्शन
         prediction = model.predict(img_array)
         result_index = np.argmax(prediction)
         confidence = np.max(prediction) * 100
         
-        # वेबसाईटवर प्रत्येक तुकडा आणि त्याचा निकाल दाखवणे
         with cols[i % 2]:
             st.image(tile_img, caption=f"तुकडा {i+1}", use_container_width=True)
             if result_index == 0:
-                st.write(f"निकाल: निरोगी ({confidence:.1f}%)")
+                st.success(f"तुकडा {i+1}: सुरक्षित ({confidence:.1f}%)")
             else:
-                st.write(f"निकाल: **रोग आढळला!** ({confidence:.1f}%)")
+                st.error(f"तुकडा {i+1}: {classes[result_index]} आढळला! ({confidence:.1f}%)")
 
 
 st.markdown("---")
