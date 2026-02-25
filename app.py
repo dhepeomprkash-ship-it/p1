@@ -1,11 +1,14 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+from folium.plugins import HeatMap
 import tensorflow as tf
 from PIL import Image
 import numpy as np
 import gdown
 import os
+from fpdf import FPDF
+import base64
 
 st.set_page_config(page_title="Sugarcane Disease AI", layout="wide")
 st.title("🌱 Sugarcane Disease Detection (उसावरील रोग ओळखणे)")
@@ -242,6 +245,8 @@ if uploaded_file is not None:
     )
 
     if detected_diseases:
+        heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
+    HeatMap(heat_data, radius=15, blur=10).add_to(m) # हीटमॅप जोडलाा
         for d in detected_diseases:
             folium.Marker(
                 [d["lat"], d["lon"]],
@@ -256,3 +261,27 @@ if uploaded_file is not None:
         st.balloons()
         st.success("तुमचे शेत पूर्णपणे निरोगी आहे! नकाशावर कोणतेही रोग आढळले नाहीत.")
         st_folium(m, width=700, height=450)
+
+# --- कृषी सल्ला (Advisory) ---
+advisory_map = {
+    "Bacterial Blight": {
+        "औषध": "Streptocycline (100 ppm) + Copper Oxychloride (0.25%)",
+        "सल्ला": "बाधित पाने कापून नष्ट करा. नत्राचा (Nitrogen) वापर काही काळ टाळा."
+    },
+    "Red Rot": {
+        "औषध": "Carbendazim (0.1%) किंवा Trichoderma viride",
+        "सल्ला": "पाण्याचा निचरा सुधारा. बाधित खुंट उपटून टाका. बेणे प्रक्रिया करा."
+    }
+}
+
+# --- PDF फंक्शन ---
+def create_pdf(data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Sugarcane Disease Report", ln=True, align='C')
+    pdf.set_font("Arial", size=12)
+    pdf.ln(10)
+    for d in data:
+        pdf.cell(200, 10, txt=f"- {d['तुकडा']}: {d['रोग']}", ln=True)
+    return pdf.output(dest='S').encode('latin-1')
