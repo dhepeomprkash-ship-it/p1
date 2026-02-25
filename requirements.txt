@@ -3,3 +3,8 @@ tensorflow
 Pillow
 numpy
 gdown
+rasterio
+opencv-python-headless
+patchify
+folium
+streamlit-folium
