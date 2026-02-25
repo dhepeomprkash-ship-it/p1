@@ -70,16 +70,27 @@ if uploaded_file is not None:
         result_index = np.argmax(prediction)
         confidence = np.max(prediction) * 100
         
-        # निकाल दाखवणे
+       # --- सुधारित निकाल दाखवणे (Logic with elif) ---
         with cols[i % 2]:
             st.image(tile_img, caption=f"तुकडा {i+1}", use_container_width=True)
+            
             if result_index == 0:
-                st.success(f"तुकडा {i+1}: सुरक्षित")
-            else:
-                st.error(f"तुकडा {i+1}: {classes[result_index]}")
-                # जर रोग असेल तर लिस्टमध्ये टाका
+                st.success(f"तुकडा {i+1}: सुरक्षित (Healthy)")
+            
+            elif result_index == 2:
+                # जर इंडेक्स २ असेल तर तो Red Rot आहे
+                st.error(f"तुकडा {i+1}: 🚩 Red Rot आढळला!")
                 detected_diseases.append({
-                    "name": f"तुकडा {i+1}: {classes[result_index]}",
+                    "name": f"तुकडा {i+1}: Red Rot",
+                    "lat": mock_locations[i]["lat"],
+                    "lon": mock_locations[i]["lon"]
+                })
+            
+            else:
+                # इंडेक्स १ साठी Bacterial Blight
+                st.warning(f"तुकडा {i+1}: Bacterial Blight आढळला")
+                detected_diseases.append({
+                    "name": f"तुकडा {i+1}: Bacterial Blight",
                     "lat": mock_locations[i]["lat"],
                     "lon": mock_locations[i]["lon"]
                 })
