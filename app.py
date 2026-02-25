@@ -101,7 +101,7 @@ if uploaded_file is not None:
     
     # १. नकाशाचा बेस तयार करा
     # सॅटेलाईट व्ह्यूसाठी हा कोड वापरा
-            m = folium.Map(
+    m = folium.Map(
     location=[18.5204, 73.8567], 
     zoom_start=15, 
     tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
