@@ -5,4 +5,4 @@ numpy
 gdown
 folium
 streamlit-folium
-pip install fpdf
+fpdf
