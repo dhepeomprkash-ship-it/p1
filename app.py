@@ -100,7 +100,13 @@ if uploaded_file is not None:
     st.header("🗺️ Disease Mapping (Spatial Distribution)")
     
     # १. नकाशाचा बेस तयार करा
-    m = folium.Map(location=[18.5204, 73.8567], zoom_start=14)
+    # सॅटेलाईट व्ह्यूसाठी हा कोड वापरा
+m = folium.Map(
+    location=[18.5204, 73.8567], 
+    zoom_start=15, 
+    tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
+    attr='Google Satellite'
+)
     
     # २. जर लिस्टमध्ये रोग आढळले असतील, तरच मार्कर लावा
     if detected_diseases:
