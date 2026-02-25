@@ -94,30 +94,165 @@ if uploaded_file is not None:
                     "lat": mock_locations[i]["lat"],
                     "lon": mock_locations[i]["lon"]
                 })
+# if uploaded_file is not None:
+#     image = Image.open(uploaded_file)
+#     st.image(image, caption='Uploaded Drone Image', use_container_width=True)
+    
+#     # १. स्वयंचलित टायलिंग (Automated Tiling)
+#     width, height = image.size
+#     tile_size = 224 # तुमच्या मॉडेलचा इनपुट आकार
+    
+#     # किती तुकडे होतील हे मोजा
+#     cols = width // tile_size
+#     rows = height // tile_size
+#     st.info(f"तुमच्या फोटोचे एकूण {cols * rows} तुकड्यांत विश्लेषण होत आहे...")
 
-    # --- नकाशाचा भाग (ओळ ९१ च्या आसपास पेस्ट करा) ---
-    st.markdown("---")
-    st.header("🗺️ Disease Mapping (Spatial Distribution)")
+#     detected_diseases = []
     
-    # १. नकाशाचा बेस तयार करा
-    # सॅटेलाईट व्ह्यूसाठी हा कोड वापरा
+#     # प्रगती दाखवण्यासाठी प्रोग्रेस बार
+#     progress_bar = st.progress(0)
+#     total_tiles = cols * rows
+#     current_tile = 0
+
+#     # २. लूप वापरून आपोआप तुकडे करणे
+#     for r in range(rows):
+#         for c in range(cols):
+#             left = c * tile_size
+#             top = r * tile_size
+#             right = left + tile_size
+#             bottom = top + tile_size
+            
+#             # तुकडा कापा
+#             tile_img = image.crop((left, top, right, bottom))
+            
+#             # मॉडेलसाठी प्रोसेसिंग
+#             img_array = np.array(tile_img.resize((224, 224))) / 255.0
+#             img_array = np.expand_dims(img_array, axis=0)
+            
+#             prediction = model.predict(img_array, verbose=0)
+#             result_index = np.argmax(prediction)
+            
+#             # जर रोग आढळला तर लोकेशन साठवा
+#             if result_index > 0:
+#                 # काल्पनिक को-ऑर्डिनेट्स (M.Sc. साठी पुण्याचे सॅम्पल)
+#                 # खऱ्या जीआयएस मध्ये इथे पिक्सेल-टू-कोऑर्डिनेट लॉजिक येईल
+#                 lat = 18.5204 + (r * 0.0005) 
+#                 lon = 73.8567 + (c * 0.0005)
+                
+#                 detected_diseases.append({
+#                     "तुकडा": f"Row {r+1}, Col {c+1}",
+#                     "रोग": classes[result_index],
+#                     "lat": lat,
+#                     "lon": lon
+#                 })
+            
+#             current_tile += 1
+#             progress_bar.progress(current_tile / total_tiles)
+
+#     # ३. नकाशावर निकाल दाखवणे
+#     st.success("विश्लेषण पूर्ण झाले!")
+    
+#     m = folium.Map(
+#         location=[18.5204, 73.8567], 
+#         zoom_start=17, 
+#         tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
+#         attr='Google Satellite Hybrid'
+#     )
+
+#     if detected_diseases:
+#         for d in detected_diseases:
+#             folium.Marker(
+#                 [d["lat"], d["lon"]],
+#                 popup=f"{d['तुकडा']}: {d['रोग']}",
+#                 icon=folium.Icon(color='red', icon='info-sign')
+#             ).add_to(m)
+        
+#         st_folium(m, width=700, height=450)
+#         st.write("📋 **सापडलेल्या रोगांचा तपशील:**")
+#         st.table(detected_diseases)
+#     else:
+#         st.balloons()
+#         st.success("तुमचे शेत पूर्णपणे निरोगी आहे! नकाशावर कोणतेही रोग आढळले नाहीत.")
+#         st_folium(m, width=700, height=450)
+
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, caption='Uploaded Drone Image', use_container_width=True)
+    
+    # १. स्वयंचलित टायलिंग (Automated Tiling)
+    width, height = image.size
+    tile_size = 224 # तुमच्या मॉडेलचा इनपुट आकार
+    
+    # किती तुकडे होतील हे मोजा
+    cols = width // tile_size
+    rows = height // tile_size
+    st.info(f"तुमच्या फोटोचे एकूण {cols * rows} तुकड्यांत विश्लेषण होत आहे...")
+
+    detected_diseases = []
+    
+    # प्रगती दाखवण्यासाठी प्रोग्रेस बार
+    progress_bar = st.progress(0)
+    total_tiles = cols * rows
+    current_tile = 0
+
+    # २. लूप वापरून आपोआप तुकडे करणे
+    for r in range(rows):
+        for c in range(cols):
+            left = c * tile_size
+            top = r * tile_size
+            right = left + tile_size
+            bottom = top + tile_size
+            
+            # तुकडा कापा
+            tile_img = image.crop((left, top, right, bottom))
+            
+            # मॉडेलसाठी प्रोसेसिंग
+            img_array = np.array(tile_img.resize((224, 224))) / 255.0
+            img_array = np.expand_dims(img_array, axis=0)
+            
+            prediction = model.predict(img_array, verbose=0)
+            result_index = np.argmax(prediction)
+            
+            # जर रोग आढळला तर लोकेशन साठवा
+            if result_index > 0:
+                # काल्पनिक को-ऑर्डिनेट्स (M.Sc. साठी पुण्याचे सॅम्पल)
+                # खऱ्या जीआयएस मध्ये इथे पिक्सेल-टू-कोऑर्डिनेट लॉजिक येईल
+                lat = 18.5204 + (r * 0.0005) 
+                lon = 73.8567 + (c * 0.0005)
+                
+                detected_diseases.append({
+                    "तुकडा": f"Row {r+1}, Col {c+1}",
+                    "रोग": classes[result_index],
+                    "lat": lat,
+                    "lon": lon
+                })
+            
+            current_tile += 1
+            progress_bar.progress(current_tile / total_tiles)
+
+    # ३. नकाशावर निकाल दाखवणे
+    st.success("विश्लेषण पूर्ण झाले!")
+    
     m = folium.Map(
-    location=[18.5204, 73.8567], 
-    zoom_start=15, 
-    tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
-    attr='Google Satellite'
-)
-    
-    # २. जर लिस्टमध्ये रोग आढळले असतील, तरच मार्कर लावा
+        location=[18.5204, 73.8567], 
+        zoom_start=17, 
+        tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
+        attr='Google Satellite Hybrid'
+    )
+
     if detected_diseases:
         for d in detected_diseases:
             folium.Marker(
                 [d["lat"], d["lon"]],
-                popup=d["name"],
-                icon=folium.Icon(color='red')
+                popup=f"{d['तुकडा']}: {d['रोग']}",
+                icon=folium.Icon(color='red', icon='info-sign')
             ).add_to(m)
+        
         st_folium(m, width=700, height=450)
+        st.write("📋 **सापडलेल्या रोगांचा तपशील:**")
+        st.table(detected_diseases)
     else:
-        # ३. जर रोग नसेल तर नुसता नकाशा आणि यशाचा मेसेज दाखवा
-        st.success("अभिनंदन! शेतात कुठेही रोग आढळला नाही.")
+        st.balloons()
+        st.success("तुमचे शेत पूर्णपणे निरोगी आहे! नकाशावर कोणतेही रोग आढळले नाहीत.")
         st_folium(m, width=700, height=450)
