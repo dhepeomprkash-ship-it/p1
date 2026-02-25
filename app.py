@@ -246,7 +246,7 @@ if uploaded_file is not None:
 
     if detected_diseases:
         heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
-    HeatMap(heat_data, radius=15, blur=10).add_to(m) # हीटमॅप जोडलाा
+        HeatMap(heat_data, radius=15, blur=10).add_to(m) # हीटमॅप जोडलाा
         for d in detected_diseases:
             folium.Marker(
                 [d["lat"], d["lon"]],
