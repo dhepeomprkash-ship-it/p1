@@ -33,9 +33,7 @@ uploaded_file = st.file_uploader("उसाच्या पानाचा स�
 
 if uploaded_file is not None:
     # --- Image Tiling Logic (हा भाग प्रेडिक्शनच्या ठिकाणी वापरा) ---
-
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
+            image = Image.open(uploaded_file)
     width, height = image.size
     
     # प्रतिमेचे ४ समान तुकडे (Tiles) पाडणे
@@ -72,6 +70,7 @@ if uploaded_file is not None:
                 st.write(f"निकाल: निरोगी ({confidence:.1f}%)")
             else:
                 st.write(f"निकाल: **रोग आढळला!** ({confidence:.1f}%)")
+
 
 st.markdown("---")
 st.header("📍 Disease Hotspots (नकाशावर आधारित विश्लेषण)")
