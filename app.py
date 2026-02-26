@@ -18,8 +18,13 @@ def load_model_from_drive():
     file_id = '1BN12K8BnYULv5X_nNQ8kQTYSLN_OZ_DI'
     output = 'sugarcane_model.h5'
     if not os.path.exists(output):
+        # 'use_cookies=False' आणि 'fuzzy=True' मुळे परमिशनचे एरर कमी होतात
         url = f'https://drive.google.com/uc?id={file_id}'
-        gdown.download(url, output, quiet=False)
+        try:
+            import gdown
+            gdown.download(url, output, quiet=False, fuzzy=True)
+        except Exception as e:
+            st.error("Drive मधून फाईल घेता आली नाही. कृपया गुगल ड्राइव्हवर फाईल 'Public' असल्याची पुन्हा एकदा खात्री करा.")
     return tf.keras.models.load_model(output)
 
 # मॉडेल लोड करणे
