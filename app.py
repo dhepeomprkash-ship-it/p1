@@ -261,11 +261,11 @@ if detected_diseases:
 
     # ३. नकाशा दाखवा (हा 'if' च्या आतच हवा)
     st_folium(m, width=700, height=450)
-            detected_diseases.append({
-            "तुकडा": f"Row {r+1}, Col {c+1}",
-            "रोग": classes[result_index],
-            "lat": lat,
-            "lon": lon
+    detected_diseases.append({
+    "तुकडा": f"Row {r+1}, Col {c+1}",
+    "रोग": classes[result_index],
+    "lat": lat,
+    "lon": lon
                 })
             
             current_tile += 1
