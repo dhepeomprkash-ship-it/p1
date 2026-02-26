@@ -268,8 +268,8 @@ if detected_diseases:
     "lon": lon
                 })
             
-            current_tile += 1
-            progress_bar.progress(current_tile / total_tiles)
+    current_tile += 1
+    progress_bar.progress(current_tile / total_tiles)
 
     # ३. नकाशावर निकाल दाखवणे
     if detected_diseases:
