@@ -261,13 +261,13 @@ if uploaded_file is not None:
     #     ).add_to(m)
 
     # ३. नकाशा दाखवा (हा 'if' च्या आतच हवा)
-    st_folium(m, width=700, height=450)
-    detected_diseases.append({
-    "तुकडा": f"Row {r+1}, Col {c+1}",
-    "रोग": classes[result_index],
-    "lat": lat,
-    "lon": lon
-                })
+    # st_folium(m, width=700, height=450)
+    # detected_diseases.append({
+    # "तुकडा": f"Row {r+1}, Col {c+1}",
+    # "रोग": classes[result_index],
+    # "lat": lat,
+    # "lon": lon
+    #             })
             
     current_tile += 1
     progress_bar.progress(current_tile / total_tiles)
