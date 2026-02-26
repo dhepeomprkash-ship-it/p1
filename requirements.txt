@@ -1,8 +1,6 @@
 streamlit
-tensorflow
-Pillow
-numpy
-gdown
 folium
 streamlit-folium
+tensorflow
+gdown
 fpdf
