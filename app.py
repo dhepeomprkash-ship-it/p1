@@ -251,13 +251,13 @@ if detected_diseases:
     heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
     HeatMap(heat_data, radius=15, blur=10).add_to(m)
     
-    # २. मार्कर्स (हे 'for' सुद्धा ४ स्पेसवर हवे)
-    for d in detected_diseases:
-        folium.Marker(
-            [d["lat"], d["lon"]],
-            popup=f"{d['तुकडा']}: {d['रोग']}",
-            icon=folium.Icon(color='red', icon='info-sign')
-        ).add_to(m)
+    # # २. मार्कर्स (हे 'for' सुद्धा ४ स्पेसवर हवे)
+    # for d in detected_diseases:
+    #     folium.Marker(
+    #         [d["lat"], d["lon"]],
+    #         popup=f"{d['तुकडा']}: {d['रोग']}",
+    #         icon=folium.Icon(color='red', icon='info-sign')
+    #     ).add_to(m)
 
     # ३. नकाशा दाखवा (हा 'if' च्या आतच हवा)
     st_folium(m, width=700, height=450)
