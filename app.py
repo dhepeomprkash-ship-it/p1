@@ -220,6 +220,7 @@ if uploaded_file is not None:
     progress_bar = st.progress(0)
     total_tiles = cols * rows
     current_tile = 0
+    detected_diseases = []
 
     # २. लूप वापरून आपोआप तुकडे करणे
     for r in range(rows):
