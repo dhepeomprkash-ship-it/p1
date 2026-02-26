@@ -43,7 +43,7 @@ def create_pdf(data):
 # मॉडेल लोड करणे
 @st.cache_resource
 def load_my_model():
-    file_id = 1BN12K8BnyULv5X_nNQ8kQTYSLN_OZ_DI
+    file_id =1BN12K8BnyULv5X_nNQ8kQTYSLN_OZ_DI
     # तुमचा Drive ID
     output = 'sugarcane_model.h5'
     if not os.path.exists(output):
