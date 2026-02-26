@@ -247,10 +247,10 @@ if uploaded_file is not None:
                 lat = 18.5204 + (r * 0.0005) 
                 lon = 73.8567 + (c * 0.0005)
 # --- अचूक मांडणी (ओळ २४७ नंतर) ---
-if detected_diseases:
-    # १. हीटमॅप (इथे डावीकडून ४ स्पेस सोडा)
-    heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
-    HeatMap(heat_data, radius=15, blur=10).add_to(m)
+    # if detected_diseases:
+    # # १. हीटमॅप (इथे डावीकडून ४ स्पेस सोडा)
+    #     heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
+    #     HeatMap(heat_data, radius=15, blur=10).add_to(m)
     
     # # २. मार्कर्स (हे 'for' सुद्धा ४ स्पेसवर हवे)
     # for d in detected_diseases:
