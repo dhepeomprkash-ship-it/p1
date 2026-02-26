@@ -30,7 +30,29 @@ disease_locations = [
     {"lat": 18.5204, "lon": 73.8567, "name": "Red Rot - Area 1"},
     {"lat": 18.5250, "lon": 73.8600, "name": "Bacterial Blight - Area 2"}
 ]
+# --- कृषी सल्ला (Advisory) ---
+advisory_map = {
+    "Bacterial Blight": {
+        "औषध": "Streptocycline (100 ppm) + Copper Oxychloride (0.25%)",
+        "सल्ला": "बाधित पाने कापून नष्ट करा. नत्राचा (Nitrogen) वापर टाळा."
+    },
+    "Red Rot": {
+        "औषध": "Carbendazim (0.1%) किंवा Trichoderma viride",
+        "सल्ला": "पाण्याचा निचरा सुधारा. बाधित खुंट उपटून टाका. बेणे प्रक्रिया करा."
+    }
+}
 
+# --- PDF फंक्शन ---
+def create_pdf(data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt="Sugarcane Disease Report", ln=True, align='C')
+    pdf.set_font("Arial", size=12)
+    pdf.ln(10)
+    for d in data:
+        pdf.cell(200, 10, txt=f"- {d['तुकडा']}: {d['रोग']}", ln=True)
+    return pdf.output(dest='S').encode('latin-1')
 # फोटो अपलोड बटण
 uploaded_file = st.file_uploader("उसाच्या पानाचा स्वच्छ फोटो अपलोड करा...", type=["jpg", "png", "jpeg"])
 
@@ -235,16 +257,16 @@ if uploaded_file is not None:
             progress_bar.progress(current_tile / total_tiles)
 
     # ३. नकाशावर निकाल दाखवणे
-    st.success("विश्लेषण पूर्ण झाले!")
+    if detected_diseases:
+        st.success("विश्लेषण पूर्ण झाले!")
     
-    m = folium.Map(
+        m = folium.Map(
         location=[18.5204, 73.8567], 
         zoom_start=17, 
         tiles='https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
         attr='Google Satellite Hybrid'
     )
 
-    if detected_diseases:
         heat_data = [[d["lat"], d["lon"]] for d in detected_diseases]
         HeatMap(heat_data, radius=15, blur=10).add_to(m) # हीटमॅप जोडलाा
         for d in detected_diseases:
@@ -261,27 +283,52 @@ if uploaded_file is not None:
         st.balloons()
         st.success("तुमचे शेत पूर्णपणे निरोगी आहे! नकाशावर कोणतेही रोग आढळले नाहीत.")
         st_folium(m, width=700, height=450)
+        # ४. कृषी सल्ला आणि रिपोर्ट (हे 'if detected_diseases' च्या आत हवे)
+    st.markdown("---")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.header("🌱 कृषी सल्ला")
+        unique_diseases = set([d["रोग"] for d in detected_diseases])
+        for disease in unique_diseases:
+            if disease in advisory_map:
+                with st.expander(f"🚩 {disease} उपाय"):
+                    st.write(f"💊 **औषध:** {advisory_map[disease]['औषध']}")
+                    st.write(f"📢 **सल्ला:** {advisory_map[disease]['सल्ला']}")
+    
+    with col2:
+        st.header("📥 रिपोर्ट")
+        pdf_data = create_pdf(detected_diseases)
+        st.download_button("Download PDF Report", data=pdf_data, file_name="Report.pdf")
 
-# --- कृषी सल्ला (Advisory) ---
-advisory_map = {
-    "Bacterial Blight": {
-        "औषध": "Streptocycline (100 ppm) + Copper Oxychloride (0.25%)",
-        "सल्ला": "बाधित पाने कापून नष्ट करा. नत्राचा (Nitrogen) वापर काही काळ टाळा."
-    },
-    "Red Rot": {
-        "औषध": "Carbendazim (0.1%) किंवा Trichoderma viride",
-        "सल्ला": "पाण्याचा निचरा सुधारा. बाधित खुंट उपटून टाका. बेणे प्रक्रिया करा."
-    }
-}
+    # सविस्तर टेबल
+    st.write("📋 **सापडलेल्या रोगांचा तपशील:**")
+    st.table(detected_diseases)
 
-# --- PDF फंक्शन ---
-def create_pdf(data):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, txt="Sugarcane Disease Report", ln=True, align='C')
-    pdf.set_font("Arial", size=12)
-    pdf.ln(10)
-    for d in data:
-        pdf.cell(200, 10, txt=f"- {d['तुकडा']}: {d['रोग']}", ln=True)
-    return pdf.output(dest='S').encode('latin-1')
+else:
+    # जर रोग सापडला नाही तर
+    st.balloons()
+    st.success("शेतात कुठेही रोग आढळला नाही!")
+# # --- कृषी सल्ला (Advisory) ---
+# advisory_map = {
+#     "Bacterial Blight": {
+#         "औषध": "Streptocycline (100 ppm) + Copper Oxychloride (0.25%)",
+#         "सल्ला": "बाधित पाने कापून नष्ट करा. नत्राचा (Nitrogen) वापर काही काळ टाळा."
+#     },
+#     "Red Rot": {
+#         "औषध": "Carbendazim (0.1%) किंवा Trichoderma viride",
+#         "सल्ला": "पाण्याचा निचरा सुधारा. बाधित खुंट उपटून टाका. बेणे प्रक्रिया करा."
+#     }
+# }
+
+# # --- PDF फंक्शन ---
+# def create_pdf(data):
+#     pdf = FPDF()
+#     pdf.add_page()
+#     pdf.set_font("Arial", 'B', 16)
+#     pdf.cell(200, 10, txt="Sugarcane Disease Report", ln=True, align='C')
+#     pdf.set_font("Arial", size=12)
+#     pdf.ln(10)
+#     for d in data:
+#         pdf.cell(200, 10, txt=f"- {d['तुकडा']}: {d['रोग']}", ln=True)
+#     return pdf.output(dest='S').encode('latin-1')
