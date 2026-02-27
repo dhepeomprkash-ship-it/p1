@@ -50,7 +50,7 @@ def load_model_permanent():
     return tf.keras.models.load_model(output)
 
 # --- ४. मुख्य प्रोग्राम ---
-st.title("🌾 Sugarcane Disease Mapping & Advisory System")
+st.title("🌾 Crop Disease Mapping & Advisory System")
 st.write("M.Sc. Geoinformatics Project | Powered by Hugging Face & Streamlit")
 
 try:
